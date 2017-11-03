@@ -2,18 +2,22 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Constants } from 'expo';
+import UserService from '../../../services/UserService';
 
 export default class EditCar extends React.Component {
 
     constructor(props){
         super();
         this.state = {
+            userId: props.screenProps.user.userId,
             carInfo: props.screenProps.user.carInfo
         };
     }
 
     saveCarInfo = () => {
-        this.props.screenProps.editUser({carInfo: this.state.carInfo});
+        const { userId, carInfo } = this.state;
+        this.props.screenProps.editUser({carInfo});
+        UserService.updateUserCarInfo(userId, carInfo);
         this.props.navigation.goBack();
     }
 

@@ -11,11 +11,14 @@ export default class ViewProfile extends React.Component {
     }
 
     render() {
-        const { id, name, tagNumber } = this.props.navigation.state.params;
+        const { userId, name, tagNumber, tagState, username, email } = this.props.navigation.state.params;
         return (
             <View style={styles.mainContainer}>
                 <Text>{name}</Text>
                 <Text>{tagNumber}</Text>
+                <Text>{tagState}</Text>
+                <Text>{username}</Text>
+                <Text>{email}</Text>
             </View>
         );
     }

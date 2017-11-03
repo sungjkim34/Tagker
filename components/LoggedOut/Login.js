@@ -14,12 +14,11 @@ export default class Login extends React.Component {
 
   login = () => {
     const { username, password } = this.state;
-    // if(AuthService.authLogin(username, password))
-      this.props.screenProps.login();
-    // this.setState({error: 'Invalid credentials'});
+      this.props.screenProps.login(username, password);
   }
 
   cancel = () => {
+    this.props.screenProps.clearError();
     this.props.navigation.goBack();
   }
 
@@ -28,7 +27,7 @@ export default class Login extends React.Component {
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
             <Text style={styles.logoText}>Tagker</Text>
-            <Text style={{color:'#FF5E5B', fontWeight:'bold'}}>{this.state.error}</Text>
+            <Text style={{color:'#FF5E5B', fontWeight:'bold'}}>{this.props.screenProps.error}</Text>
             <TextInput underlineColorAndroid='transparent' onChangeText={(text)=>this.setState({username: text, error: ''})} style={styles.textInput} autoCorrect={false} autoCapitalize='none' placeholder="Username"/>
             <TextInput underlineColorAndroid='transparent' onChangeText={(text)=>this.setState({password: text, error: ''})} style={styles.textInput} secureTextEntry={true} placeholder="Password"/>
             <Text style={{color: '#B2B2B2'}}><Text onPress={()=>console.log('forgot username')}>Forgot Username</Text> | <Text onPress={()=>console.log('forgot password')}>Forgot Password</Text> </Text>

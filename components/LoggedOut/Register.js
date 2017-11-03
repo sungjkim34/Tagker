@@ -11,7 +11,7 @@ export default class Register extends React.Component {
         email: '',
         password: '',
         tagNumber: '',
-        state: '',
+        tagState: '',
         showPassword: false,
         error: ''
     };
@@ -26,7 +26,7 @@ export default class Register extends React.Component {
   }
 
   inputState = (text) => {
-      this.setState({error: '', state: text.replace(/[^A-Za-z]+/g, '').toUpperCase()});
+      this.setState({error: '', tagState: text.replace(/[^A-Za-z]+/g, '').toUpperCase()});
   }
 
   inputName = (text) =>
@@ -36,15 +36,17 @@ export default class Register extends React.Component {
   }
 
   register = () => {
-      const { name } = this.state;
-      const newName = name.charAt(name.length-1) === ' ' ? name.substring(0, name.length-1) : name;
-      if(newName.split(' ').length <= 1){
-          this.setState({error: 'Please enter full name.'})
-      }
-    //   this.props.screenProps.register();
+      const { email, password, name, username, tagNumber, tagState } = this.state;
+      const userInfo = { email, password, name, username, tagNumber, tagState };
+    //   const newName = name.charAt(name.length-1) === ' ' ? name.substring(0, name.length-1) : name;
+    //   if(newName.split(' ').length <= 1){
+    //       this.setState({error: 'Please enter full name.'})
+    //   }
+      this.props.screenProps.register(userInfo);
   }
 
   cancel = () => {
+      this.props.screenProps.clearError();
       this.props.navigation.goBack();
   }
 
@@ -53,15 +55,15 @@ export default class Register extends React.Component {
         <View style={styles.mainContainer}>
             <View style={styles.contentContainer}>
                 <Text style={styles.logoText}>Tagker</Text>
-                <Text style={{color:'#FF5E5B', fontWeight:'bold'}}>{this.state.error}</Text>
+                <Text style={{color:'#FF5E5B', fontWeight:'bold'}}>{this.props.screenProps.error}</Text>
                 <TextInput value={this.state.name} autoCorrect={false} onChangeText={text=>this.inputName(text)} style={styles.textInput} placeholder="Full Name"/>
-                <TextInput style={styles.textInput} autoCapitalize='none' autoCorrect={false} placeholder="Email"/>
-                <TextInput style={styles.textInput} autoCorrect={false} autoCapitalize='none' autoCorrect={false} placeholder="Username"/>
-                <TextInput style={styles.textInput} secureTextEntry={!this.state.showPassword} placeholder="Password"/>
+                <TextInput style={styles.textInput} onChangeText={text=>this.setState({email: text})} autoCapitalize='none' autoCorrect={false} placeholder="Email"/>
+                <TextInput style={styles.textInput} onChangeText={text=>this.setState({username: text})} autoCorrect={false} autoCapitalize='none' autoCorrect={false} placeholder="Username"/>
+                <TextInput style={styles.textInput} onChangeText={text=>this.setState({password: text})} secureTextEntry={!this.state.showPassword} placeholder="Password"/>
                 <CheckBox checkedColor='#B2B2B2' checked={this.state.showPassword} onPress={()=>this.setState({showPassword: !this.state.showPassword})} title="Show Password" textStyle={{color:'#B2B2B2'}} style={{backgroundColor: '#FFFFFF'}}/>
                 <View style={styles.row}>
                     <TextInput width={180} autoCorrect={false} autoCapitalize='none' onChangeText={text=>this.inputTagNumber(text)} value={this.state.tagNumber} style={styles.tagInput} maxLength={8} placeholder="License Plate #"/>
-                    <TextInput value={this.state.state} onChangeText={text=>this.inputState(text)} style={styles.tagInput} maxLength={2} placeholder="State"/>
+                    <TextInput value={this.state.tagState} onChangeText={text=>this.inputState(text)} style={styles.tagInput} maxLength={2} placeholder="State"/>
                 </View>
             </View>
             <TouchableHighlight onPress={()=>this.register()} style={styles.loginButton}>

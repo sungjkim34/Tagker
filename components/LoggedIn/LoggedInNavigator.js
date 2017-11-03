@@ -5,14 +5,14 @@ import { Constants } from 'expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from './Home';
 import Profile from './Profile/Profile';
-import Messages from './Messages';
+import Messages from './Messages/Messages';
 import Search from './Search/Search';
 
 export const LoggedInNavigator = TabNavigator({
     Home: {
       screen: Home,
       navigationOptions: {
-        header: null,
+        // header: null,
         headerTitle: 'Home',
         tabBarIcon: ({tintColor}) => <Icon name="home" color={tintColor} size={24}/>
       }
@@ -36,7 +36,7 @@ export const LoggedInNavigator = TabNavigator({
     Profile: {
       screen: Profile,
       navigationOptions: {
-        header: null,
+        // header: null,
         headerTitle: 'Profile',
         tabBarIcon: ({tintColor}) => <Icon name="user" color={tintColor} size={24}/>
       }

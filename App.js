@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
 import { LoggedOutNavigator } from './components/LoggedOut/LoggedOutNavigator';
-import { RootNavigator } from './components/LoggedIn/MainLoggedInNavigator';
+import { MainLoggedInNavigator } from './components/LoggedIn/MainLoggedInNavigator';
 import Home from './components/LoggedIn/Home';
+import AuthService from './services/AuthService';
+import UserService from './services/UserService';
 
 export default class App extends React.Component {
   constructor(){
@@ -11,47 +13,85 @@ export default class App extends React.Component {
       isLoggedIn: false,
       user: {
         profilePicture: 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
-        name: 'Jay Kim',
-        username: 'umja345',
-        tagNumber: 'JAY3494',
-        tagState: 'GA',
-        carInfo: 'Hyundai Elantra'
-      }
+        name: 'Name Placeholder',
+        email: 'Email Placeholder',
+        username: 'Username Placeholder',
+        tagNumber: 'TagNumber Placeholder',
+        tagState: 'UN',
+        carInfo: 'CarInfo Placeholder',
+        userId: 'UserId Placeholder'
+      },
+      // usersList: [],
+      error: ''
     }
   }
   
   editUser = (editedField) => {
+    console.log(editedField);
     this.setState({user: {...this.state.user, ...editedField}});
   }
 
-  login = () => {
-    // Handle login. If successful, login.
-    this.setState({isLoggedIn: true});
+  login = (username, password) => {
+    // TODO: Remove hardcoded username and password
+    // username = 'jay';
+    // password = 'password';
+    UserService.getUserInfoFromUsername(username)
+      .then(userInfo => this.setState({user: {...this.state.user, ...userInfo}}))
+      .catch(err => console.log(err));
+    AuthService.getEmail(username)
+      .then(email => AuthService.authLogin(email, password)
+                      .then(res => this.setState({isLoggedIn: true})))
+                      .catch(err => this.setState({error: err.toString().replace('Error: ', '')}))
+      .catch(err => this.setState({error: err}));
   }
 
-  register = () => {
-    // Handle register. If successful, login.
-    this.setState({isLoggedIn: true});
+  register = (userInfo) => {
+    AuthService.register(userInfo.email, userInfo.password)
+      .then(res => {
+        AuthService.updateUser(res.uid, userInfo);
+        this.login(userInfo.username, userInfo.password);
+      })
+      .catch(err => this.setState({error: err.toString().replace('Error: ', '')}));
   }
 
   logout = () => {
-    this.setState({isLoggedIn: false});
+    // TODO: Logout of firebase
+    this.setState({
+      ...this.state,
+      isLoggedIn: false,
+      user: {
+        profilePicture: 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
+        name: 'Name Placeholder',
+        email: 'Email Placeholder',
+        username: 'Username Placeholder',
+        tagNumber: 'TagNumber Placeholder',
+        tagState: 'UN',
+        carInfo: 'CarInfo Placeholder',
+        userId: 'UserId Placeholder'
+      },
+    });
+  }
+
+  clearError = () => {
+    this.setState({error: ''});
   }
 
   render() {
     return (
       this.state.isLoggedIn ?
-        <RootNavigator screenProps={
+        <MainLoggedInNavigator screenProps={
           {
             editUser: (editedField) => this.editUser(editedField),
             logout: () => this.logout(),
-            user: this.state.user
+            user: this.state.user,
           }}/>
                 :
         <LoggedOutNavigator screenProps={
           { 
-            login: () => this.login(),
-            register: () => this.register()
+            login: (username, password) => this.login(username, password),
+            register: (userInfo) => this.register(userInfo),
+            clearError: () => this.clearError(),
+            error: this.state.error
           }}/>
     );
   }

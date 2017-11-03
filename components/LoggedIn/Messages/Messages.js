@@ -6,15 +6,10 @@ export default class Messages extends React.Component {
     super();
   }
 
-  logout = () => {
-    this.props.screenProps.logout();
-  }
-
   render() {
     return (
       <View style={styles.mainContainer}>
         <Text>Messages</Text>
-        <Text onPress={()=>this.logout()}>Log out</Text>
       </View>
     );
   }

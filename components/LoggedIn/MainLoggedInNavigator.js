@@ -12,7 +12,7 @@ import EditCar from './Profile/EditCar';
 import EditProfilePicture from './Profile/EditProfilePicture';
 import ViewProfile from './Search/ViewProfile';
 
-export const RootNavigator = StackNavigator({
+export const MainLoggedInNavigator = StackNavigator({
     Home: {
       screen:LoggedInNavigator,
     },

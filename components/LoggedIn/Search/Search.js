@@ -1,36 +1,21 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SearchBar, List, ListItem } from 'react-native-elements'
+import UserService from '../../../services/UserService';
 
 export default class Search extends React.Component {
   constructor(){
     super();
     this.state = {
-      searchResults: [
-        {
-          id: 1,
-          name: 'Jay Kim',
-          tagNumber: 'PDE3021',
-        },
-        {
-          id: 2,
-          name: 'Amy Wang',
-          tagNumber: 'MU3W030',
-        },
-      ],
-      usersList: [
-        {
-          id: 1,
-          name: 'Jay Kim',
-          tagNumber: 'PDE3021',
-        },
-        {
-          id: 2,
-          name: 'Amy Wang',
-          tagNumber: 'MU3W030',
-        },
-      ]
+      searchResults: [],
+      usersList: []
     }
+  }
+  
+  componentDidMount(){
+    UserService.getListOfUsers()
+      .then(res => this.setState({usersList: res, searchResults: res}))
+      .catch(err => console.log(err))
   }
 
   search = (text) => {
@@ -45,6 +30,7 @@ export default class Search extends React.Component {
           <SearchBar
             round
             lightTheme
+            autoCorrect={false}
             onChangeText={(text)=>this.search(text)}
             placeholder='Search' />
         </View>
@@ -53,7 +39,7 @@ export default class Search extends React.Component {
             {
               this.state.searchResults.map((user, i) => (
                 <ListItem
-                  key={i}
+                  key={user.userId}
                   title={user.name}
                   subtitle={user.tagNumber}
                   onPress={()=>this.props.navigation.navigate('ViewProfile', user)}
@@ -70,7 +56,7 @@ export default class Search extends React.Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#E2E8ED'
