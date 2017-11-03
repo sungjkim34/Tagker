@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableHighlight, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableHighlight, TextInput, ActivityIndicator } from 'react-native';
 import AuthService from '../../services/AuthService'
 
 export default class Login extends React.Component {
@@ -27,6 +27,7 @@ export default class Login extends React.Component {
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
             <Text style={styles.logoText}>Tagker</Text>
+            {this.props.screenProps.isLoading && <ActivityIndicator style={styles.loading} size={'large'}/>}
             <Text style={{color:'#FF5E5B', fontWeight:'bold'}}>{this.props.screenProps.error}</Text>
             <TextInput underlineColorAndroid='transparent' onChangeText={(text)=>this.setState({username: text, error: ''})} style={styles.textInput} autoCorrect={false} autoCapitalize='none' placeholder="Username"/>
             <TextInput underlineColorAndroid='transparent' onChangeText={(text)=>this.setState({password: text, error: ''})} style={styles.textInput} secureTextEntry={true} placeholder="Password"/>
@@ -44,6 +45,15 @@ export default class Login extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   mainContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',

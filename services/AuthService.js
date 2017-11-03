@@ -34,4 +34,11 @@ export default class AuthService {
             tagState: userInfo.tagState
         }).then(res => console.log(res)).catch(err => console.log(err));
     }
+
+    static signOut = () => {
+        const firebaseApp = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+        firebaseApp.auth().signOut()
+            .then(res => console.log('sign out successful :' + res))
+            .catch(err => console.log('sign out error: ' + err));
+    }
 }

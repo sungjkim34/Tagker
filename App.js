@@ -9,8 +9,12 @@ import UserService from './services/UserService';
 export default class App extends React.Component {
   constructor(){
     super();
+    console.ignoredYellowBox = [
+      'Setting a timer'
+      ];
     this.state = {
       isLoggedIn: false,
+      isLoading: false,
       user: {
         profilePicture: 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
         name: 'Name Placeholder',
@@ -35,14 +39,15 @@ export default class App extends React.Component {
     // TODO: Remove hardcoded username and password
     // username = 'jay';
     // password = 'password';
+    this.setState({isLoading: true});
     UserService.getUserInfoFromUsername(username)
       .then(userInfo => this.setState({user: {...this.state.user, ...userInfo}}))
-      .catch(err => console.log(err));
+      .catch(err => this.setState({isLoading: false, error: err}));
     AuthService.getEmail(username)
       .then(email => AuthService.authLogin(email, password)
-                      .then(res => this.setState({isLoggedIn: true})))
-                      .catch(err => this.setState({error: err.toString().replace('Error: ', '')}))
-      .catch(err => this.setState({error: err}));
+                      .then(res => this.setState({isLoading: false, isLoggedIn: true})))
+                      .catch(err => this.setState({isLoading: false, error: err.toString().replace('Error: ', '')}))
+      .catch(err => this.setState({isLoading: false, error: err}));
   }
 
   register = (userInfo) => {
@@ -91,6 +96,7 @@ export default class App extends React.Component {
             login: (username, password) => this.login(username, password),
             register: (userInfo) => this.register(userInfo),
             clearError: () => this.clearError(),
+            isLoading: this.state.isLoading,
             error: this.state.error
           }}/>
     );

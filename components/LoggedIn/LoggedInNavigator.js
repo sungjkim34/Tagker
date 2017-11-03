@@ -13,6 +13,7 @@ export const LoggedInNavigator = TabNavigator({
       screen: Home,
       navigationOptions: {
         // header: null,
+        headerStyle: { marginTop: (Platform.OS === 'ios') ? 0 : Constants.statusBarHeight },
         headerTitle: 'Home',
         tabBarIcon: ({tintColor}) => <Icon name="home" color={tintColor} size={24}/>
       }
@@ -37,6 +38,7 @@ export const LoggedInNavigator = TabNavigator({
       screen: Profile,
       navigationOptions: {
         // header: null,
+        headerStyle: { marginTop: (Platform.OS === 'ios') ? 0 : Constants.statusBarHeight },
         headerTitle: 'Profile',
         tabBarIcon: ({tintColor}) => <Icon name="user" color={tintColor} size={24}/>
       }

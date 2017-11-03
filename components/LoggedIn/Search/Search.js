@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import { SearchBar, List, ListItem } from 'react-native-elements'
 import UserService from '../../../services/UserService';
 
@@ -23,6 +23,11 @@ export default class Search extends React.Component {
     this.setState({searchResults});
   }
 
+  handlePressUser = (user) => {
+    Keyboard.dismiss();
+    this.props.navigation.navigate('ViewProfile', user);
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -42,7 +47,7 @@ export default class Search extends React.Component {
                   key={user.userId}
                   title={user.name}
                   subtitle={user.tagNumber}
-                  onPress={()=>this.props.navigation.navigate('ViewProfile', user)}
+                  onPress={()=>this.handlePressUser(user)}
                 />
               ))
             }
